@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clippy Agents Demo</title>
+    <link rel="stylesheet" href="assets/clippy.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e5799, #7db9e8);
+            color: white;
+            margin: 0;
+            padding: 20px;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .description {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 2rem;
+        }
+        
+        button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        .agent-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 2rem;
+        }
+        
+        .agent-button {
+            background-color: #2196F3;
+            padding: 8px 15px;
+        }
+        
+        .agent-button:hover {
+            background-color: #0b7dda;
+        }
+        
+        .agent-button.active {
+            background-color: #ff5722;
+        }
+        
+        .status {
+            font-style: italic;
+            margin-top: 1rem;
+        }
+        
+        .footer {
+            position: fixed;
+            bottom: 10px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Clippy Agents Demo</h1>
+        <p class="description">Click on an agent name to add them to the screen. They'll move around, animate, and respond to clicks!</p>
+        
+        <div class="controls">
+            <button id="clearAll">Clear All Agents</button>
+            <button id="addRandom">Add Random Agent</button>
+        </div>
+        
+        <div class="agent-list">
+            <button class="agent-button" data-agent="Clippy">Clippy</button>
+            <button class="agent-button" data-agent="Bonzi">Bonzi</button>
+            <button class="agent-button" data-agent="Genie">Genie</button>
+            <button class="agent-button" data-agent="Merlin">Merlin</button>
+            <button class="agent-button" data-agent="Rover">Rover</button>
+            <button class="agent-button" data-agent="Links">Links</button>
+            <button class="agent-button" data-agent="F1">F1</button>
+            <button class="agent-button" data-agent="Peedy">Peedy</button>
+            <button class="agent-button" data-agent="Genius">Genius</button>
+            <button class="agent-button" data-agent="Rocky">Rocky</button>
+        </div>
+        
+        <p class="status" id="status">No agents active. Click an agent name to add it.</p>
+    </div>
+    
+    <div class="footer">
+        © 2024 Clippy Agents Demo | Using ClippyJS library
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="dist/clippy.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
