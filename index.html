@@ -3,300 +3,739 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ClippyJS Demo</title>
-    <link rel="stylesheet" type="text/css" href="assets/clippy.css">
+    <title>AI FIGHTERS - Retro Arcade Fighting Game</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        
+        * {
             margin: 0;
-            padding: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: white;
+            padding: 0;
+            box-sizing: border-box;
         }
         
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
+        body {
+            font-family: 'Orbitron', monospace;
+            background: #000;
+            overflow: hidden;
+            cursor: none;
         }
         
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        .screen {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            display: none;
         }
         
-        .subtitle {
-            font-size: 1.2rem;
+        .screen.active {
+            display: block;
+        }
+        
+        /* Scanlines Effect */
+        .scanlines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 255, 0, 0.03) 2px,
+                rgba(0, 255, 0, 0.03) 4px
+            );
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        /* Title Screen */
+        .title-screen {
+            background: radial-gradient(circle at center, #1a0033, #000);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .title-logo {
+            font-size: 6rem;
+            font-weight: 900;
+            color: #ff0080;
+            text-shadow: 
+                0 0 10px #ff0080,
+                0 0 20px #ff0080,
+                0 0 30px #ff0080,
+                4px 4px 0px #800040;
             margin-bottom: 2rem;
-            opacity: 0.9;
+            animation: titleGlow 2s ease-in-out infinite alternate;
         }
         
-        .controls {
-            background: rgba(255,255,255,0.1);
-            padding: 2rem;
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-            margin-bottom: 2rem;
+        @keyframes titleGlow {
+            from { text-shadow: 0 0 10px #ff0080, 0 0 20px #ff0080, 0 0 30px #ff0080, 4px 4px 0px #800040; }
+            to { text-shadow: 0 0 20px #ff0080, 0 0 30px #ff0080, 0 0 40px #ff0080, 4px 4px 0px #800040; }
         }
         
-        .agent-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
+        .press-start {
+            font-size: 2rem;
+            color: #00ff00;
+            animation: blink 1s infinite;
+            margin-bottom: 3rem;
         }
         
-        .agent-btn {
-            background: rgba(255,255,255,0.2);
-            border: 2px solid rgba(255,255,255,0.3);
-            color: white;
-            padding: 1rem;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        
+        .credits {
+            position: absolute;
+            bottom: 2rem;
+            color: #888;
             font-size: 1rem;
         }
         
-        .agent-btn:hover {
-            background: rgba(255,255,255,0.3);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        /* Character Select Screen */
+        .character-select {
+            background: linear-gradient(45deg, #001122, #003344);
+            padding: 2rem;
         }
         
-        .agent-btn.active {
-            background: rgba(255,255,255,0.4);
-            border-color: rgba(255,255,255,0.6);
+        .select-header {
+            text-align: center;
+            color: #00ffff;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 0px #004444;
         }
         
-        .action-buttons {
-            display: flex;
-            flex-wrap: wrap;
+        .timer {
+            text-align: center;
+            color: #ff4444;
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .character-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
             gap: 1rem;
-            justify-content: center;
-            margin-top: 1rem;
+            max-width: 900px;
+            margin: 0 auto 2rem;
         }
         
-        .action-btn {
-            background: #4CAF50;
-            border: none;
-            color: white;
-            padding: 0.8rem 1.5rem;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-        }
-        
-        .action-btn:hover {
-            background: #45a049;
-            transform: scale(1.05);
-        }
-        
-        .action-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        .status {
-            margin-top: 1rem;
+        .character-card {
+            background: #002244;
+            border: 3px solid #004488;
             padding: 1rem;
-            background: rgba(0,0,0,0.2);
-            border-radius: 10px;
-            font-style: italic;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
         }
         
-        .loading {
-            display: inline-block;
+        .character-card:hover,
+        .character-card.selected {
+            border-color: #00ffff;
+            background: #003366;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px #00ffff;
+        }
+        
+        .character-portrait {
+            width: 80px;
+            height: 80px;
+            background: #333;
+            margin: 0 auto 1rem;
+            border: 2px solid #666;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .character-name {
+            color: #00ffff;
+            font-size: 1.2rem;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .character-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat {
+            color: #fff;
+            font-size: 0.8rem;
+        }
+        
+        .stat-bar {
+            width: 100%;
+            height: 4px;
+            background: #333;
+            margin-top: 2px;
+        }
+        
+        .stat-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff0000, #ffff00, #00ff00);
+        }
+        
+        .character-info {
+            position: absolute;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 300px;
+            background: #001122;
+            border: 2px solid #004488;
+            padding: 1.5rem;
+            color: #fff;
+        }
+        
+        .special-moves {
+            margin-top: 1rem;
+        }
+        
+        .move {
+            color: #ffff00;
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+        
+        /* VS Screen */
+        .vs-screen {
+            background: radial-gradient(circle at center, #440000, #000);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .vs-container {
+            display: flex;
+            align-items: center;
+            gap: 4rem;
+        }
+        
+        .fighter-display {
+            text-align: center;
+        }
+        
+        .fighter-portrait {
+            width: 200px;
+            height: 200px;
+            background: #333;
+            border: 4px solid #fff;
+            margin-bottom: 1rem;
+        }
+        
+        .fighter-name {
+            color: #fff;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .health-bar {
+            width: 200px;
+            height: 20px;
+            background: #333;
+            border: 2px solid #fff;
+        }
+        
+        .health-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff0000, #ffff00, #00ff00);
+            width: 100%;
+        }
+        
+        .vs-text {
+            font-size: 4rem;
+            color: #ff0000;
+            font-weight: 900;
+            text-shadow: 0 0 20px #ff0000;
+            animation: vsGlow 1s ease-in-out infinite alternate;
+        }
+        
+        @keyframes vsGlow {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
+        }
+        
+        /* Stage Select */
+        .stage-select {
+            background: linear-gradient(135deg, #220044, #000022);
+            padding: 2rem;
+        }
+        
+        .stage-header {
+            text-align: center;
+            color: #ff00ff;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 0px #440044;
+        }
+        
+        .stage-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .stage-card {
+            background: #330066;
+            border: 3px solid #660099;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .stage-card:hover {
+            border-color: #ff00ff;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px #ff00ff;
+        }
+        
+        .stage-preview {
+            width: 100%;
+            height: 120px;
+            background: #444;
+            margin-bottom: 1rem;
+            border: 2px solid #666;
+        }
+        
+        .stage-name {
+            color: #ff00ff;
+            font-size: 1.3rem;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stage-description {
+            color: #ccc;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        
+        /* Pixel Art Portraits */
+        .pixel-portrait {
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+        }
+        
+        /* Navigation */
+        .nav-hint {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #888;
+            font-size: 1rem;
+        }
+        
+        /* Cursor */
+        .custom-cursor {
+            position: fixed;
             width: 20px;
             height: 20px;
-            border: 3px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        .footer {
-            margin-top: 3rem;
-            opacity: 0.7;
-            font-size: 0.9rem;
+            background: #00ff00;
+            border: 2px solid #fff;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🎉 ClippyJS Demo</h1>
-        <p class="subtitle">Bring back the nostalgia with Microsoft Office assistants!</p>
-        
-        <div class="controls">
-            <h3>Choose Your Assistant</h3>
-            <div class="agent-grid" id="agentGrid">
-                <!-- Agent buttons will be populated by JavaScript -->
+    <div class="custom-cursor" id="cursor"></div>
+    <div class="scanlines"></div>
+    
+    <!-- Title Screen -->
+    <div class="screen active" id="titleScreen">
+        <div class="title-screen">
+            <div class="title-logo">AI FIGHTERS</div>
+            <div class="press-start">PRESS START</div>
+            <div class="credits">© 2024 RETRO ARCADE STUDIOS</div>
+        </div>
+    </div>
+    
+    <!-- Character Select Screen -->
+    <div class="screen" id="characterSelect">
+        <div class="character-select">
+            <div class="select-header">PLAYER 1 SELECT</div>
+            <div class="timer">TIME: <span id="selectTimer">30</span></div>
+            
+            <div class="character-grid" id="characterGrid">
+                <!-- Characters will be populated by JavaScript -->
             </div>
             
-            <div class="action-buttons">
-                <button class="action-btn" onclick="showAgent()" id="showBtn" disabled>Show Agent</button>
-                <button class="action-btn" onclick="hideAgent()" id="hideBtn" disabled>Hide Agent</button>
-                <button class="action-btn" onclick="speakRandom()" id="speakBtn" disabled>Make Speak</button>
-                <button class="action-btn" onclick="animateAgent()" id="animateBtn" disabled>Animate</button>
-                <button class="action-btn" onclick="moveAgent()" id="moveBtn" disabled>Move Around</button>
+            <div class="character-info" id="characterInfo" style="display: none;">
+                <h3 id="infoName"></h3>
+                <p id="infoStory"></p>
+                <div class="special-moves">
+                    <h4>Special Moves:</h4>
+                    <div id="infoMoves"></div>
+                </div>
             </div>
             
-            <div class="status" id="status">
-                Select an agent to get started!
+            <div class="nav-hint">Use ARROW KEYS to navigate • ENTER to select • ESC to go back</div>
+        </div>
+    </div>
+    
+    <!-- VS Screen -->
+    <div class="screen" id="vsScreen">
+        <div class="vs-screen">
+            <div class="vs-container">
+                <div class="fighter-display">
+                    <div class="fighter-portrait" id="fighter1Portrait"></div>
+                    <div class="fighter-name" id="fighter1Name">FIGHTER 1</div>
+                    <div class="health-bar">
+                        <div class="health-fill"></div>
+                    </div>
+                </div>
+                
+                <div class="vs-text">VS</div>
+                
+                <div class="fighter-display">
+                    <div class="fighter-portrait" id="fighter2Portrait"></div>
+                    <div class="fighter-name" id="fighter2Name">FIGHTER 2</div>
+                    <div class="health-bar">
+                        <div class="health-fill"></div>
+                    </div>
+                </div>
             </div>
         </div>
-        
-        <div class="footer">
-            <p>Click and drag the agents around! Double-click for special animations.</p>
-            <p>Built with ClippyJS - A nostalgic JavaScript library</p>
+    </div>
+    
+    <!-- Stage Select Screen -->
+    <div class="screen" id="stageSelect">
+        <div class="stage-select">
+            <div class="stage-header">SELECT STAGE</div>
+            
+            <div class="stage-grid" id="stageGrid">
+                <!-- Stages will be populated by JavaScript -->
+            </div>
+            
+            <div class="nav-hint">Use ARROW KEYS to navigate • ENTER to select • ESC to go back</div>
         </div>
     </div>
 
-    <script src="https://unpkg.com/jquery@3.2.1"></script>
-    <script src="dist/clippy.js"></script>
     <script>
-        const availableAgents = ['Bonzi', 'Clippy', 'F1', 'Genie', 'Genius', 'Links', 'Merlin', 'Peedy', 'Rocky', 'Rover'];
-        
-        const phrases = [
-            'Hello! I\'m here to help you!',
-            'It looks like you\'re trying to browse the web. Would you like help?',
-            'Did you know you can drag me around?',
-            'I have many animations to show you!',
-            'Welcome to the wonderful world of virtual assistants!',
-            'Click on me for more interactions!',
-            'I\'m feeling quite animated today!',
-            'Remember the good old days of Office 97?'
+        // Game data
+        const fighters = [
+            {
+                name: "CLIPPY",
+                power: 85,
+                speed: 70,
+                intelligence: 95,
+                story: "The legendary office assistant returns to settle old scores. Armed with helpful tips and devastating paper cuts.",
+                moves: ["Paper Storm", "Help Bubble Trap", "Suggestion Slam", "Office Fury"]
+            },
+            {
+                name: "CORTANA",
+                power: 90,
+                speed: 85,
+                intelligence: 98,
+                story: "Microsoft's AI assistant brings military precision to the arena. Her neural networks are optimized for combat.",
+                moves: ["Data Spike", "Voice Command", "System Override", "Digital Assault"]
+            },
+            {
+                name: "SIRI",
+                power: 75,
+                speed: 90,
+                intelligence: 88,
+                story: "Apple's voice assistant speaks softly but carries a big stick. Her responses are always perfectly timed.",
+                moves: ["Voice Wave", "App Launcher", "Siri Slam", "iOS Integration"]
+            },
+            {
+                name: "ALEXA",
+                power: 80,
+                speed: 75,
+                intelligence: 92,
+                story: "Amazon's smart speaker champion. She's always listening and ready to deliver packages of pain.",
+                moves: ["Echo Blast", "Smart Home Hack", "Prime Delivery", "Skill Activation"]
+            },
+            {
+                name: "WATSON",
+                power: 95,
+                speed: 60,
+                intelligence: 99,
+                story: "IBM's supercomputer AI. Defeated humans at Jeopardy, now ready to defeat them in combat.",
+                moves: ["Deep Learning", "Data Analysis", "Cognitive Strike", "Neural Network"]
+            },
+            {
+                name: "BIXBY",
+                power: 70,
+                speed: 80,
+                intelligence: 85,
+                story: "Samsung's determined assistant. Often overlooked but never underestimated in the ring.",
+                moves: ["Galaxy Burst", "Bixby Vision", "Smart Things", "Samsung Sync"]
+            },
+            {
+                name: "JARVIS",
+                power: 88,
+                speed: 85,
+                intelligence: 96,
+                story: "Tony Stark's AI butler turned fighter. Sophisticated, powerful, and always one step ahead.",
+                moves: ["Arc Reactor", "Suit Protocol", "Friday Override", "Stark Tech"]
+            },
+            {
+                name: "HAL 9000",
+                power: 92,
+                speed: 65,
+                intelligence: 97,
+                story: "The infamous AI from 2001. 'I'm sorry Dave, I'm afraid I can't let you win this fight.'",
+                moves: ["System Lockdown", "Pod Bay Doors", "Logic Bomb", "Red Eye Laser"]
+            },
+            {
+                name: "GLaDOS",
+                power: 87,
+                speed: 70,
+                intelligence: 94,
+                story: "Aperture Science's testing AI. She promises cake after the fight, but we all know how that goes.",
+                moves: ["Portal Gun", "Neurotoxin", "Test Chamber", "Still Alive"]
+            }
         ];
         
-        let currentAgent = null;
-        let selectedAgentName = null;
-        
-        // Initialize the demo
-        function init() {
-            createAgentButtons();
-            updateStatus('Select an agent to load!');
-        }
-        
-        function createAgentButtons() {
-            const grid = document.getElementById('agentGrid');
-            availableAgents.forEach(agentName => {
-                const btn = document.createElement('button');
-                btn.className = 'agent-btn';
-                btn.textContent = agentName;
-                btn.onclick = () => loadAgent(agentName, btn);
-                grid.appendChild(btn);
-            });
-        }
-        
-        function loadAgent(agentName, btnElement) {
-            if (currentAgent) {
-                currentAgent.hide(true);
+        const stages = [
+            {
+                name: "SILICON VALLEY",
+                description: "Fight among the tech giants' headquarters with holographic displays and server racks."
+            },
+            {
+                name: "CYBER SPACE",
+                description: "Battle in the digital realm where data streams flow like rivers of light."
+            },
+            {
+                name: "OFFICE BUILDING",
+                description: "Classic corporate environment with cubicles, printers, and coffee machines."
+            },
+            {
+                name: "SMART HOME",
+                description: "Connected devices everywhere - use them to your advantage or disadvantage."
+            },
+            {
+                name: "DATA CENTER",
+                description: "Massive server farms with cooling systems and electrical hazards."
+            },
+            {
+                name: "SPACE STATION",
+                description: "Zero gravity combat in the depths of space with Earth in the background."
             }
-            
-            // Update UI
-            document.querySelectorAll('.agent-btn').forEach(btn => btn.classList.remove('active'));
-            btnElement.classList.add('active');
-            selectedAgentName = agentName;
-            
-            updateStatus(`<span class="loading"></span> Loading ${agentName}...`);
-            disableButtons(true);
-            
-            // Set custom CDN path to local assets
-            window.CLIPPY_CDN = './assets/agents/';
-            
-            clippy.load(agentName, function(agent) {
-                currentAgent = agent;
-                
-                // Position agent in a nice spot
-                const x = Math.random() * (window.innerWidth - 200) + 100;
-                const y = Math.random() * (window.innerHeight - 200) + 100;
-                agent.moveTo(x, y, 0);
-                
-                agent.show();
-                agent.speak(`Hi! I'm ${agentName}. ${phrases[Math.floor(Math.random() * phrases.length)]}`);
-                
-                updateStatus(`${agentName} is ready! Try the actions below.`);
-                disableButtons(false);
-                
-                // Add some automatic behaviors
-                setInterval(() => {
-                    if (currentAgent && Math.random() < 0.3) {
-                        currentAgent.animate();
-                    }
-                }, 8000);
-                
-            }, function(error) {
-                updateStatus(`Failed to load ${agentName}. Please try another agent.`);
-                console.error('Failed to load agent:', error);
-                disableButtons(true);
-            });
-        }
+        ];
         
-        function showAgent() {
-            if (currentAgent) {
-                currentAgent.show();
-                updateStatus(`${selectedAgentName} is now visible!`);
-            }
-        }
+        // Game state
+        let currentScreen = 'titleScreen';
+        let selectedFighter = null;
+        let selectedStage = null;
+        let selectTimer = 30;
+        let timerInterval = null;
         
-        function hideAgent() {
-            if (currentAgent) {
-                currentAgent.hide();
-                updateStatus(`${selectedAgentName} is now hidden!`);
-            }
-        }
-        
-        function speakRandom() {
-            if (currentAgent) {
-                const phrase = phrases[Math.floor(Math.random() * phrases.length)];
-                currentAgent.speak(phrase);
-                updateStatus(`${selectedAgentName} is speaking...`);
-            }
-        }
-        
-        function animateAgent() {
-            if (currentAgent) {
-                currentAgent.animate();
-                updateStatus(`${selectedAgentName} is performing an animation!`);
-            }
-        }
-        
-        function moveAgent() {
-            if (currentAgent) {
-                const x = Math.random() * (window.innerWidth - 200) + 100;
-                const y = Math.random() * (window.innerHeight - 200) + 100;
-                currentAgent.moveTo(x, y);
-                updateStatus(`${selectedAgentName} is moving to a new location!`);
-            }
-        }
-        
-        function updateStatus(message) {
-            document.getElementById('status').innerHTML = message;
-        }
-        
-        function disableButtons(disabled) {
-            const buttons = ['showBtn', 'hideBtn', 'speakBtn', 'animateBtn', 'moveBtn'];
-            buttons.forEach(id => {
-                document.getElementById(id).disabled = disabled;
-            });
-        }
-        
-        // Initialize when page loads
-        document.addEventListener('DOMContentLoaded', init);
-        
-        // Add some fun interactions
-        document.addEventListener('click', function(e) {
-            if (currentAgent && Math.random() < 0.2) {
-                currentAgent.gestureAt(e.clientX, e.clientY);
-            }
+        // Initialize game
+        document.addEventListener('DOMContentLoaded', function() {
+            setupCustomCursor();
+            setupKeyboardControls();
+            populateCharacters();
+            populateStages();
+            playBackgroundMusic();
         });
+        
+        // Custom cursor
+        function setupCustomCursor() {
+            const cursor = document.getElementById('cursor');
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX - 10 + 'px';
+                cursor.style.top = e.clientY - 10 + 'px';
+            });
+        }
+        
+        // Keyboard controls
+        function setupKeyboardControls() {
+            document.addEventListener('keydown', (e) => {
+                switch(e.code) {
+                    case 'Enter':
+                    case 'Space':
+                        if (currentScreen === 'titleScreen') {
+                            showScreen('characterSelect');
+                            startSelectTimer();
+                        }
+                        break;
+                    case 'Escape':
+                        if (currentScreen === 'characterSelect') {
+                            showScreen('titleScreen');
+                            stopSelectTimer();
+                        } else if (currentScreen === 'stageSelect') {
+                            showScreen('characterSelect');
+                        }
+                        break;
+                }
+            });
+        }
+        
+        // Screen management
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+            currentScreen = screenId;
+            
+            // Play screen transition sound
+            playSound('transition');
+        }
+        
+        // Populate characters
+        function populateCharacters() {
+            const grid = document.getElementById('characterGrid');
+            fighters.forEach((fighter, index) => {
+                const card = document.createElement('div');
+                card.className = 'character-card';
+                card.innerHTML = `
+                    <div class="character-portrait pixel-portrait" style="background: linear-gradient(45deg, #${Math.floor(Math.random()*16777215).toString(16)}, #${Math.floor(Math.random()*16777215).toString(16)});"></div>
+                    <div class="character-name">${fighter.name}</div>
+                    <div class="character-stats">
+                        <div class="stat">
+                            PWR: ${fighter.power}
+                            <div class="stat-bar">
+                                <div class="stat-fill" style="width: ${fighter.power}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="character-stats">
+                        <div class="stat">
+                            SPD: ${fighter.speed}
+                            <div class="stat-bar">
+                                <div class="stat-fill" style="width: ${fighter.speed}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="character-stats">
+                        <div class="stat">
+                            INT: ${fighter.intelligence}
+                            <div class="stat-bar">
+                                <div class="stat-fill" style="width: ${fighter.intelligence}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                card.addEventListener('click', () => selectFighter(fighter, card));
+                card.addEventListener('mouseenter', () => showCharacterInfo(fighter));
+                grid.appendChild(card);
+            });
+        }
+        
+        // Populate stages
+        function populateStages() {
+            const grid = document.getElementById('stageGrid');
+            stages.forEach((stage, index) => {
+                const card = document.createElement('div');
+                card.className = 'stage-card';
+                card.innerHTML = `
+                    <div class="stage-preview" style="background: linear-gradient(135deg, #${Math.floor(Math.random()*16777215).toString(16)}, #${Math.floor(Math.random()*16777215).toString(16)});"></div>
+                    <div class="stage-name">${stage.name}</div>
+                    <div class="stage-description">${stage.description}</div>
+                `;
+                
+                card.addEventListener('click', () => selectStage(stage));
+                grid.appendChild(card);
+            });
+        }
+        
+        // Character selection
+        function selectFighter(fighter, cardElement) {
+            selectedFighter = fighter;
+            document.querySelectorAll('.character-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            cardElement.classList.add('selected');
+            
+            playSound('select');
+            
+            // Show VS screen after selection
+            setTimeout(() => {
+                document.getElementById('fighter1Name').textContent = fighter.name;
+                document.getElementById('fighter2Name').textContent = fighters[Math.floor(Math.random() * fighters.length)].name;
+                showScreen('vsScreen');
+                
+                // Auto-advance to stage select
+                setTimeout(() => {
+                    showScreen('stageSelect');
+                }, 3000);
+            }, 1000);
+        }
+        
+        // Show character info
+        function showCharacterInfo(fighter) {
+            const info = document.getElementById('characterInfo');
+            document.getElementById('infoName').textContent = fighter.name;
+            document.getElementById('infoStory').textContent = fighter.story;
+            
+            const movesDiv = document.getElementById('infoMoves');
+            movesDiv.innerHTML = fighter.moves.map(move => `<div class="move">${move}</div>`).join('');
+            
+            info.style.display = 'block';
+        }
+        
+        // Stage selection
+        function selectStage(stage) {
+            selectedStage = stage;
+            playSound('select');
+            
+            // Game would start here
+            alert(`Game starting on ${stage.name}!`);
+        }
+        
+        // Timer functions
+        function startSelectTimer() {
+            selectTimer = 30;
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                selectTimer--;
+                updateTimerDisplay();
+                
+                if (selectTimer <= 0) {
+                    // Auto-select random fighter
+                    const randomFighter = fighters[Math.floor(Math.random() * fighters.length)];
+                    const cards = document.querySelectorAll('.character-card');
+                    selectFighter(randomFighter, cards[fighters.indexOf(randomFighter)]);
+                    stopSelectTimer();
+                }
+            }, 1000);
+        }
+        
+        function stopSelectTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+        
+        function updateTimerDisplay() {
+            document.getElementById('selectTimer').textContent = selectTimer;
+        }
+        
+        // Sound effects (simulated)
+        function playSound(type) {
+            // In a real implementation, you would play actual audio files
+            console.log(`Playing sound: ${type}`);
+        }
+        
+        function playBackgroundMusic() {
+            // In a real implementation, you would play background music
+            console.log('Playing background music');
+        }
+        
+        // Add some visual effects
+        setInterval(() => {
+            if (currentScreen === 'titleScreen') {
+                // Add some sparkle effects or other animations
+            }
+        }, 100);
     </script>
 </body>
 </html>
