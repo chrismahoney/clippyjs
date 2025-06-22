@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClippyJS Demo</title>
+    <link rel="stylesheet" type="text/css" href="assets/clippy.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .controls {
+            background: rgba(255,255,255,0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 2rem;
+        }
+        
+        .agent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .agent-btn {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+        
+        .agent-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .agent-btn.active {
+            background: rgba(255,255,255,0.4);
+            border-color: rgba(255,255,255,0.6);
+        }
+        
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        
+        .action-btn {
+            background: #4CAF50;
+            border: none;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .action-btn:hover {
+            background: #45a049;
+            transform: scale(1.05);
+        }
+        
+        .action-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .status {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+            font-style: italic;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .footer {
+            margin-top: 3rem;
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎉 ClippyJS Demo</h1>
+        <p class="subtitle">Bring back the nostalgia with Microsoft Office assistants!</p>
+        
+        <div class="controls">
+            <h3>Choose Your Assistant</h3>
+            <div class="agent-grid" id="agentGrid">
+                <!-- Agent buttons will be populated by JavaScript -->
+            </div>
+            
+            <div class="action-buttons">
+                <button class="action-btn" onclick="showAgent()" id="showBtn" disabled>Show Agent</button>
+                <button class="action-btn" onclick="hideAgent()" id="hideBtn" disabled>Hide Agent</button>
+                <button class="action-btn" onclick="speakRandom()" id="speakBtn" disabled>Make Speak</button>
+                <button class="action-btn" onclick="animateAgent()" id="animateBtn" disabled>Animate</button>
+                <button class="action-btn" onclick="moveAgent()" id="moveBtn" disabled>Move Around</button>
+            </div>
+            
+            <div class="status" id="status">
+                Select an agent to get started!
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Click and drag the agents around! Double-click for special animations.</p>
+            <p>Built with ClippyJS - A nostalgic JavaScript library</p>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/jquery@3.2.1"></script>
+    <script src="dist/clippy.js"></script>
+    <script>
+        const availableAgents = ['Bonzi', 'Clippy', 'F1', 'Genie', 'Genius', 'Links', 'Merlin', 'Peedy', 'Rocky', 'Rover'];
+        
+        const phrases = [
+            'Hello! I\'m here to help you!',
+            'It looks like you\'re trying to browse the web. Would you like help?',
+            'Did you know you can drag me around?',
+            'I have many animations to show you!',
+            'Welcome to the wonderful world of virtual assistants!',
+            'Click on me for more interactions!',
+            'I\'m feeling quite animated today!',
+            'Remember the good old days of Office 97?'
+        ];
+        
+        let currentAgent = null;
+        let selectedAgentName = null;
+        
+        // Initialize the demo
+        function init() {
+            createAgentButtons();
+            updateStatus('Select an agent to load!');
+        }
+        
+        function createAgentButtons() {
+            const grid = document.getElementById('agentGrid');
+            availableAgents.forEach(agentName => {
+                const btn = document.createElement('button');
+                btn.className = 'agent-btn';
+                btn.textContent = agentName;
+                btn.onclick = () => loadAgent(agentName, btn);
+                grid.appendChild(btn);
+            });
+        }
+        
+        function loadAgent(agentName, btnElement) {
+            if (currentAgent) {
+                currentAgent.hide(true);
+            }
+            
+            // Update UI
+            document.querySelectorAll('.agent-btn').forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+            selectedAgentName = agentName;
+            
+            updateStatus(`<span class="loading"></span> Loading ${agentName}...`);
+            disableButtons(true);
+            
+            // Set custom CDN path to local assets
+            window.CLIPPY_CDN = './assets/agents/';
+            
+            clippy.load(agentName, function(agent) {
+                currentAgent = agent;
+                
+                // Position agent in a nice spot
+                const x = Math.random() * (window.innerWidth - 200) + 100;
+                const y = Math.random() * (window.innerHeight - 200) + 100;
+                agent.moveTo(x, y, 0);
+                
+                agent.show();
+                agent.speak(`Hi! I'm ${agentName}. ${phrases[Math.floor(Math.random() * phrases.length)]}`);
+                
+                updateStatus(`${agentName} is ready! Try the actions below.`);
+                disableButtons(false);
+                
+                // Add some automatic behaviors
+                setInterval(() => {
+                    if (currentAgent && Math.random() < 0.3) {
+                        currentAgent.animate();
+                    }
+                }, 8000);
+                
+            }, function(error) {
+                updateStatus(`Failed to load ${agentName}. Please try another agent.`);
+                console.error('Failed to load agent:', error);
+                disableButtons(true);
+            });
+        }
+        
+        function showAgent() {
+            if (currentAgent) {
+                currentAgent.show();
+                updateStatus(`${selectedAgentName} is now visible!`);
+            }
+        }
+        
+        function hideAgent() {
+            if (currentAgent) {
+                currentAgent.hide();
+                updateStatus(`${selectedAgentName} is now hidden!`);
+            }
+        }
+        
+        function speakRandom() {
+            if (currentAgent) {
+                const phrase = phrases[Math.floor(Math.random() * phrases.length)];
+                currentAgent.speak(phrase);
+                updateStatus(`${selectedAgentName} is speaking...`);
+            }
+        }
+        
+        function animateAgent() {
+            if (currentAgent) {
+                currentAgent.animate();
+                updateStatus(`${selectedAgentName} is performing an animation!`);
+            }
+        }
+        
+        function moveAgent() {
+            if (currentAgent) {
+                const x = Math.random() * (window.innerWidth - 200) + 100;
+                const y = Math.random() * (window.innerHeight - 200) + 100;
+                currentAgent.moveTo(x, y);
+                updateStatus(`${selectedAgentName} is moving to a new location!`);
+            }
+        }
+        
+        function updateStatus(message) {
+            document.getElementById('status').innerHTML = message;
+        }
+        
+        function disableButtons(disabled) {
+            const buttons = ['showBtn', 'hideBtn', 'speakBtn', 'animateBtn', 'moveBtn'];
+            buttons.forEach(id => {
+                document.getElementById(id).disabled = disabled;
+            });
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', init);
+        
+        // Add some fun interactions
+        document.addEventListener('click', function(e) {
+            if (currentAgent && Math.random() < 0.2) {
+                currentAgent.gestureAt(e.clientX, e.clientY);
+            }
+        });
+    </script>
+</body>
+</html>
