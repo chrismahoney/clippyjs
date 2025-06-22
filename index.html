@@ -320,6 +320,230 @@
             text-align: center;
         }
         
+        /* Fighting Screen */
+        .fighting-screen {
+            background: linear-gradient(180deg, #001133, #000011);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stage-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.3;
+            z-index: 1;
+        }
+        
+        .fight-ui {
+            position: relative;
+            z-index: 10;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .fight-hud {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: rgba(0, 0, 0, 0.8);
+        }
+        
+        .player-hud {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 300px;
+        }
+        
+        .player-name {
+            color: #fff;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .player-health {
+            width: 250px;
+            height: 30px;
+            background: #333;
+            border: 3px solid #fff;
+            position: relative;
+            margin-bottom: 0.5rem;
+        }
+        
+        .player-health-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff0000, #ffff00, #00ff00);
+            transition: width 0.3s ease;
+        }
+        
+        .player-energy {
+            width: 200px;
+            height: 15px;
+            background: #333;
+            border: 2px solid #00ffff;
+            position: relative;
+        }
+        
+        .player-energy-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0066ff, #00ffff);
+            transition: width 0.3s ease;
+        }
+        
+        .round-timer {
+            text-align: center;
+            color: #fff;
+            font-size: 3rem;
+            font-weight: 900;
+            text-shadow: 2px 2px 0px #000;
+        }
+        
+        .fight-arena {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            padding: 0 10%;
+            padding-bottom: 10%;
+        }
+        
+        .fighter {
+            width: 120px;
+            height: 180px;
+            position: relative;
+            transition: all 0.1s ease;
+        }
+        
+        .fighter-sprite {
+            width: 100%;
+            height: 100%;
+            background: #444;
+            border: 3px solid #fff;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .fighter.attacking {
+            transform: scale(1.1);
+        }
+        
+        .fighter.hit {
+            animation: hitFlash 0.3s;
+        }
+        
+        @keyframes hitFlash {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(2) hue-rotate(180deg); }
+        }
+        
+        .fighter.blocking {
+            filter: brightness(0.7);
+        }
+        
+        .fighter.special {
+            animation: specialGlow 0.5s;
+        }
+        
+        @keyframes specialGlow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(2) drop-shadow(0 0 20px #ffff00); }
+        }
+        
+        .controls-hint {
+            position: absolute;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #888;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        
+        .damage-number {
+            position: absolute;
+            color: #ff0000;
+            font-size: 2rem;
+            font-weight: 900;
+            pointer-events: none;
+            animation: damageFloat 1s ease-out forwards;
+        }
+        
+        @keyframes damageFloat {
+            0% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-50px); }
+        }
+        
+        .special-effect {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ffff00, transparent);
+            animation: specialBurst 0.5s ease-out forwards;
+            pointer-events: none;
+        }
+        
+        @keyframes specialBurst {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(3); opacity: 0; }
+        }
+        
+        .round-announcement {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4rem;
+            color: #fff;
+            font-weight: 900;
+            text-shadow: 3px 3px 0px #000;
+            z-index: 100;
+            animation: announceSlide 2s ease-out forwards;
+        }
+        
+        @keyframes announceSlide {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            20% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+            80% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+        }
+        
+        /* Game Over Screen */
+        .game-over {
+            background: radial-gradient(circle at center, #330000, #000);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .game-over-text {
+            font-size: 4rem;
+            color: #ff0000;
+            font-weight: 900;
+            text-shadow: 0 0 20px #ff0000;
+            margin-bottom: 2rem;
+        }
+        
+        .winner-name {
+            font-size: 3rem;
+            color: #ffff00;
+            margin-bottom: 2rem;
+        }
+        
+        .play-again {
+            font-size: 1.5rem;
+            color: #00ff00;
+            animation: blink 1s infinite;
+        }
+        
         /* Pixel Art Portraits */
         .pixel-portrait {
             image-rendering: pixelated;
@@ -423,6 +647,63 @@
             <div class="nav-hint">Use ARROW KEYS to navigate • ENTER to select • ESC to go back</div>
         </div>
     </div>
+    
+    <!-- Fighting Screen -->
+    <div class="screen" id="fightingScreen">
+        <div class="fighting-screen">
+            <div class="stage-background" id="stageBackground"></div>
+            
+            <div class="fight-ui">
+                <div class="fight-hud">
+                    <div class="player-hud">
+                        <div class="player-name" id="player1Name">PLAYER 1</div>
+                        <div class="player-health">
+                            <div class="player-health-fill" id="player1Health"></div>
+                        </div>
+                        <div class="player-energy">
+                            <div class="player-energy-fill" id="player1Energy"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="round-timer" id="roundTimer">99</div>
+                    
+                    <div class="player-hud">
+                        <div class="player-name" id="player2Name">PLAYER 2</div>
+                        <div class="player-health">
+                            <div class="player-health-fill" id="player2Health"></div>
+                        </div>
+                        <div class="player-energy">
+                            <div class="player-energy-fill" id="player2Energy"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="fight-arena" id="fightArena">
+                    <div class="fighter" id="fighter1">
+                        <div class="fighter-sprite"></div>
+                    </div>
+                    
+                    <div class="fighter" id="fighter2">
+                        <div class="fighter-sprite"></div>
+                    </div>
+                </div>
+                
+                <div class="controls-hint">
+                    Player 1: A/D - Move, W - Jump, S - Block, Q/E - Attack, R - Special<br>
+                    Player 2: ←/→ - Move, ↑ - Jump, ↓ - Block, ,/. - Attack, / - Special
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Game Over Screen -->
+    <div class="screen" id="gameOverScreen">
+        <div class="game-over">
+            <div class="game-over-text" id="gameOverText">GAME OVER</div>
+            <div class="winner-name" id="winnerName">WINNER</div>
+            <div class="play-again">PRESS SPACE TO PLAY AGAIN</div>
+        </div>
+    </div>
 
     <script>
         // Game data
@@ -433,7 +714,8 @@
                 speed: 70,
                 intelligence: 95,
                 story: "The legendary office assistant returns to settle old scores. Armed with helpful tips and devastating paper cuts.",
-                moves: ["Paper Storm", "Help Bubble Trap", "Suggestion Slam", "Office Fury"]
+                moves: ["Paper Storm", "Help Bubble Trap", "Suggestion Slam", "Office Fury"],
+                color: "#0066cc"
             },
             {
                 name: "CORTANA",
@@ -441,7 +723,8 @@
                 speed: 85,
                 intelligence: 98,
                 story: "Microsoft's AI assistant brings military precision to the arena. Her neural networks are optimized for combat.",
-                moves: ["Data Spike", "Voice Command", "System Override", "Digital Assault"]
+                moves: ["Data Spike", "Voice Command", "System Override", "Digital Assault"],
+                color: "#0078d4"
             },
             {
                 name: "SIRI",
@@ -449,7 +732,8 @@
                 speed: 90,
                 intelligence: 88,
                 story: "Apple's voice assistant speaks softly but carries a big stick. Her responses are always perfectly timed.",
-                moves: ["Voice Wave", "App Launcher", "Siri Slam", "iOS Integration"]
+                moves: ["Voice Wave", "App Launcher", "Siri Slam", "iOS Integration"],
+                color: "#007aff"
             },
             {
                 name: "ALEXA",
@@ -457,7 +741,8 @@
                 speed: 75,
                 intelligence: 92,
                 story: "Amazon's smart speaker champion. She's always listening and ready to deliver packages of pain.",
-                moves: ["Echo Blast", "Smart Home Hack", "Prime Delivery", "Skill Activation"]
+                moves: ["Echo Blast", "Smart Home Hack", "Prime Delivery", "Skill Activation"],
+                color: "#ff9900"
             },
             {
                 name: "WATSON",
@@ -465,7 +750,8 @@
                 speed: 60,
                 intelligence: 99,
                 story: "IBM's supercomputer AI. Defeated humans at Jeopardy, now ready to defeat them in combat.",
-                moves: ["Deep Learning", "Data Analysis", "Cognitive Strike", "Neural Network"]
+                moves: ["Deep Learning", "Data Analysis", "Cognitive Strike", "Neural Network"],
+                color: "#1f70c1"
             },
             {
                 name: "BIXBY",
@@ -473,7 +759,8 @@
                 speed: 80,
                 intelligence: 85,
                 story: "Samsung's determined assistant. Often overlooked but never underestimated in the ring.",
-                moves: ["Galaxy Burst", "Bixby Vision", "Smart Things", "Samsung Sync"]
+                moves: ["Galaxy Burst", "Bixby Vision", "Smart Things", "Samsung Sync"],
+                color: "#1428a0"
             },
             {
                 name: "JARVIS",
@@ -481,7 +768,8 @@
                 speed: 85,
                 intelligence: 96,
                 story: "Tony Stark's AI butler turned fighter. Sophisticated, powerful, and always one step ahead.",
-                moves: ["Arc Reactor", "Suit Protocol", "Friday Override", "Stark Tech"]
+                moves: ["Arc Reactor", "Suit Protocol", "Friday Override", "Stark Tech"],
+                color: "#ffd700"
             },
             {
                 name: "HAL 9000",
@@ -489,7 +777,8 @@
                 speed: 65,
                 intelligence: 97,
                 story: "The infamous AI from 2001. 'I'm sorry Dave, I'm afraid I can't let you win this fight.'",
-                moves: ["System Lockdown", "Pod Bay Doors", "Logic Bomb", "Red Eye Laser"]
+                moves: ["System Lockdown", "Pod Bay Doors", "Logic Bomb", "Red Eye Laser"],
+                color: "#ff0000"
             },
             {
                 name: "GLaDOS",
@@ -497,43 +786,89 @@
                 speed: 70,
                 intelligence: 94,
                 story: "Aperture Science's testing AI. She promises cake after the fight, but we all know how that goes.",
-                moves: ["Portal Gun", "Neurotoxin", "Test Chamber", "Still Alive"]
+                moves: ["Portal Gun", "Neurotoxin", "Test Chamber", "Still Alive"],
+                color: "#ff9900"
             }
         ];
         
         const stages = [
             {
                 name: "SILICON VALLEY",
-                description: "Fight among the tech giants' headquarters with holographic displays and server racks."
+                description: "Fight among the tech giants' headquarters with holographic displays and server racks.",
+                color: "#4285f4",
+                hazards: ["Falling servers", "Electric surges", "Drone attacks"]
             },
             {
                 name: "CYBER SPACE",
-                description: "Battle in the digital realm where data streams flow like rivers of light."
+                description: "Battle in the digital realm where data streams flow like rivers of light.",
+                color: "#00ff88",
+                hazards: ["Data corruption", "Firewall barriers", "Virus attacks"]
             },
             {
                 name: "OFFICE BUILDING",
-                description: "Classic corporate environment with cubicles, printers, and coffee machines."
+                description: "Classic corporate environment with cubicles, printers, and coffee machines.",
+                color: "#888888",
+                hazards: ["Paper jams", "Coffee spills", "Falling office supplies"]
             },
             {
                 name: "SMART HOME",
-                description: "Connected devices everywhere - use them to your advantage or disadvantage."
+                description: "Connected devices everywhere - use them to your advantage or disadvantage.",
+                color: "#ff6600",
+                hazards: ["Rogue vacuum", "Sprinkler system", "Smart lights flashing"]
             },
             {
                 name: "DATA CENTER",
-                description: "Massive server farms with cooling systems and electrical hazards."
+                description: "Massive server farms with cooling systems and electrical hazards.",
+                color: "#0099cc",
+                hazards: ["Overheating", "Liquid cooling leaks", "Power surges"]
             },
             {
                 name: "SPACE STATION",
-                description: "Zero gravity combat in the depths of space with Earth in the background."
+                description: "Zero gravity combat in the depths of space with Earth in the background.",
+                color: "#663399",
+                hazards: ["Oxygen depletion", "Micro-meteorites", "Gravity fluctuations"]
             }
         ];
         
         // Game state
         let currentScreen = 'titleScreen';
         let selectedFighter = null;
+        let cpuFighter = null;
         let selectedStage = null;
         let selectTimer = 30;
         let timerInterval = null;
+        let fightTimer = 99;
+        let fightTimerInterval = null;
+        let currentRound = 1;
+        let maxRounds = 3;
+        let player1Wins = 0;
+        let player2Wins = 0;
+        
+        // Fighting mechanics
+        let player1 = {
+            health: 100,
+            energy: 0,
+            position: 20,
+            isJumping: false,
+            isBlocking: false,
+            isAttacking: false,
+            direction: 1, // 1 = facing right, -1 = facing left
+            specialMoves: []
+        };
+        
+        let player2 = {
+            health: 100,
+            energy: 0,
+            position: 80,
+            isJumping: false,
+            isBlocking: false,
+            isAttacking: false,
+            direction: -1, // -1 = facing left, 1 = facing right
+            specialMoves: []
+        };
+        
+        // Key states
+        const keys = {};
         
         // Initialize game
         document.addEventListener('DOMContentLoaded', function() {
@@ -556,12 +891,17 @@
         // Keyboard controls
         function setupKeyboardControls() {
             document.addEventListener('keydown', (e) => {
+                keys[e.code] = true;
+                
                 switch(e.code) {
                     case 'Enter':
                     case 'Space':
                         if (currentScreen === 'titleScreen') {
                             showScreen('characterSelect');
                             startSelectTimer();
+                        } else if (currentScreen === 'gameOverScreen') {
+                            resetGame();
+                            showScreen('titleScreen');
                         }
                         break;
                     case 'Escape':
@@ -570,9 +910,15 @@
                             stopSelectTimer();
                         } else if (currentScreen === 'stageSelect') {
                             showScreen('characterSelect');
+                        } else if (currentScreen === 'fightingScreen') {
+                            pauseGame();
                         }
                         break;
                 }
+            });
+            
+            document.addEventListener('keyup', (e) => {
+                keys[e.code] = false;
             });
         }
         
@@ -586,6 +932,11 @@
             
             // Play screen transition sound
             playSound('transition');
+            
+            // If entering fight screen, start the fight
+            if (screenId === 'fightingScreen') {
+                startFight();
+            }
         }
         
         // Populate characters
@@ -595,7 +946,7 @@
                 const card = document.createElement('div');
                 card.className = 'character-card';
                 card.innerHTML = `
-                    <div class="character-portrait pixel-portrait" style="background: linear-gradient(45deg, #${Math.floor(Math.random()*16777215).toString(16)}, #${Math.floor(Math.random()*16777215).toString(16)});"></div>
+                    <div class="character-portrait pixel-portrait" style="background: linear-gradient(45deg, ${fighter.color}, #${Math.floor(Math.random()*16777215).toString(16)});"></div>
                     <div class="character-name">${fighter.name}</div>
                     <div class="character-stats">
                         <div class="stat">
@@ -636,7 +987,7 @@
                 const card = document.createElement('div');
                 card.className = 'stage-card';
                 card.innerHTML = `
-                    <div class="stage-preview" style="background: linear-gradient(135deg, #${Math.floor(Math.random()*16777215).toString(16)}, #${Math.floor(Math.random()*16777215).toString(16)});"></div>
+                    <div class="stage-preview" style="background: linear-gradient(135deg, ${stage.color}, #${Math.floor(Math.random()*16777215).toString(16)});"></div>
                     <div class="stage-name">${stage.name}</div>
                     <div class="stage-description">${stage.description}</div>
                 `;
@@ -656,10 +1007,19 @@
             
             playSound('select');
             
+            // Choose a random CPU opponent (not the same as player)
+            let availableFighters = fighters.filter(f => f.name !== fighter.name);
+            cpuFighter = availableFighters[Math.floor(Math.random() * availableFighters.length)];
+            
             // Show VS screen after selection
             setTimeout(() => {
                 document.getElementById('fighter1Name').textContent = fighter.name;
-                document.getElementById('fighter2Name').textContent = fighters[Math.floor(Math.random() * fighters.length)].name;
+                document.getElementById('fighter2Name').textContent = cpuFighter.name;
+                
+                // Set fighter portraits with their colors
+                document.getElementById('fighter1Portrait').style.background = fighter.color;
+                document.getElementById('fighter2Portrait').style.background = cpuFighter.color;
+                
                 showScreen('vsScreen');
                 
                 // Auto-advance to stage select
@@ -686,8 +1046,579 @@
             selectedStage = stage;
             playSound('select');
             
-            // Game would start here
-            alert(`Game starting on ${stage.name}!`);
+            // Set stage background
+            document.getElementById('stageBackground').style.background = `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), linear-gradient(135deg, ${stage.color}, #${Math.floor(Math.random()*16777215).toString(16)})`;
+            
+            // Start the fight
+            showScreen('fightingScreen');
+        }
+        
+        // Start fight
+        function startFight() {
+            // Reset player stats
+            resetPlayers();
+            
+            // Set player names
+            document.getElementById('player1Name').textContent = selectedFighter.name;
+            document.getElementById('player2Name').textContent = cpuFighter.name;
+            
+            // Set fighter sprites with their colors
+            document.getElementById('fighter1').querySelector('.fighter-sprite').style.background = selectedFighter.color;
+            document.getElementById('fighter2').querySelector('.fighter-sprite').style.background = cpuFighter.color;
+            
+            // Set initial positions
+            updateFighterPositions();
+            
+            // Show round announcement
+            showRoundAnnouncement();
+            
+            // Start round timer
+            startRoundTimer();
+            
+            // Start game loop
+            requestAnimationFrame(gameLoop);
+        }
+        
+        // Reset players for a new round
+        function resetPlayers() {
+            player1 = {
+                health: 100,
+                energy: 0,
+                position: 20,
+                isJumping: false,
+                isBlocking: false,
+                isAttacking: false,
+                direction: 1,
+                specialMoves: selectedFighter.moves
+            };
+            
+            player2 = {
+                health: 100,
+                energy: 0,
+                position: 80,
+                isJumping: false,
+                isBlocking: false,
+                isAttacking: false,
+                direction: -1,
+                specialMoves: cpuFighter.moves
+            };
+            
+            // Update UI
+            updateHealthBars();
+            updateEnergyBars();
+        }
+        
+        // Show round announcement
+        function showRoundAnnouncement() {
+            const arena = document.getElementById('fightArena');
+            const announcement = document.createElement('div');
+            announcement.className = 'round-announcement';
+            announcement.textContent = `ROUND ${currentRound}`;
+            arena.appendChild(announcement);
+            
+            playSound('round');
+            
+            // Remove after animation
+            setTimeout(() => {
+                announcement.remove();
+                playSound('fight');
+                
+                // Show "FIGHT!" text
+                const fightText = document.createElement('div');
+                fightText.className = 'round-announcement';
+                fightText.textContent = 'FIGHT!';
+                arena.appendChild(fightText);
+                
+                setTimeout(() => {
+                    fightText.remove();
+                }, 2000);
+            }, 2000);
+        }
+        
+        // Start round timer
+        function startRoundTimer() {
+            fightTimer = 99;
+            updateTimerDisplay();
+            
+            if (fightTimerInterval) {
+                clearInterval(fightTimerInterval);
+            }
+            
+            fightTimerInterval = setInterval(() => {
+                fightTimer--;
+                updateTimerDisplay();
+                
+                if (fightTimer <= 0) {
+                    clearInterval(fightTimerInterval);
+                    endRound();
+                }
+            }, 1000);
+        }
+        
+        // Update timer display
+        function updateTimerDisplay() {
+            document.getElementById('roundTimer').textContent = fightTimer.toString().padStart(2, '0');
+            
+            // Flash timer when low
+            if (fightTimer <= 10) {
+                document.getElementById('roundTimer').style.color = fightTimer % 2 === 0 ? '#ff0000' : '#ffffff';
+            }
+        }
+        
+        // Update fighter positions
+        function updateFighterPositions() {
+            document.getElementById('fighter1').style.left = `${player1.position}%`;
+            document.getElementById('fighter2').style.left = `${player2.position}%`;
+            
+            // Update fighter direction based on relative positions
+            if (player1.position < player2.position) {
+                player1.direction = 1;
+                player2.direction = -1;
+                document.getElementById('fighter1').style.transform = 'scaleX(1)';
+                document.getElementById('fighter2').style.transform = 'scaleX(-1)';
+            } else {
+                player1.direction = -1;
+                player2.direction = 1;
+                document.getElementById('fighter1').style.transform = 'scaleX(-1)';
+                document.getElementById('fighter2').style.transform = 'scaleX(1)';
+            }
+        }
+        
+        // Update health bars
+        function updateHealthBars() {
+            document.getElementById('player1Health').style.width = `${player1.health}%`;
+            document.getElementById('player2Health').style.width = `${player2.health}%`;
+        }
+        
+        // Update energy bars
+        function updateEnergyBars() {
+            document.getElementById('player1Energy').style.width = `${player1.energy}%`;
+            document.getElementById('player2Energy').style.width = `${player2.energy}%`;
+        }
+        
+        // Game loop
+        function gameLoop() {
+            if (currentScreen !== 'fightingScreen') return;
+            
+            // Handle player 1 input
+            handlePlayerInput(player1, 'KeyA', 'KeyD', 'KeyW', 'KeyS', 'KeyQ', 'KeyE', 'KeyR');
+            
+            // Handle CPU AI for player 2
+            handleCpuAi(player2, player1);
+            
+            // Check for collision
+            checkCollision();
+            
+            // Update positions
+            updateFighterPositions();
+            
+            // Gradually increase energy
+            increaseEnergy();
+            
+            // Request next frame
+            requestAnimationFrame(gameLoop);
+        }
+        
+        // Handle player input
+        function handlePlayerInput(player, leftKey, rightKey, jumpKey, blockKey, attack1Key, attack2Key, specialKey) {
+            // Only allow movement if not attacking or blocking
+            if (!player.isAttacking && !player.isBlocking) {
+                // Move left
+                if (keys[leftKey]) {
+                    player.position = Math.max(5, player.position - (player.isJumping ? 0.5 : 1));
+                }
+                
+                // Move right
+                if (keys[rightKey]) {
+                    player.position = Math.min(95, player.position + (player.isJumping ? 0.5 : 1));
+                }
+                
+                // Jump
+                if (keys[jumpKey] && !player.isJumping) {
+                    player.isJumping = true;
+                    playSound('jump');
+                    
+                    // Jump animation
+                    const fighter = player === player1 ? document.getElementById('fighter1') : document.getElementById('fighter2');
+                    fighter.style.transition = 'transform 0.5s cubic-bezier(0.2, -0.3, 0.7, 1.3)';
+                    fighter.style.transform = `${fighter.style.transform.includes('-1') ? 'scaleX(-1)' : 'scaleX(1)'} translateY(-100px)`;
+                    
+                    setTimeout(() => {
+                        fighter.style.transition = 'transform 0.3s ease';
+                        fighter.style.transform = `${fighter.style.transform.includes('-1') ? 'scaleX(-1)' : 'scaleX(1)'} translateY(0)`;
+                        
+                        setTimeout(() => {
+                            player.isJumping = false;
+                        }, 300);
+                    }, 500);
+                }
+            }
+            
+            // Block
+            player.isBlocking = keys[blockKey];
+            if (player.isBlocking) {
+                const fighter = player === player1 ? document.getElementById('fighter1') : document.getElementById('fighter2');
+                fighter.classList.add('blocking');
+            } else {
+                const fighter = player === player1 ? document.getElementById('fighter1') : document.getElementById('fighter2');
+                fighter.classList.remove('blocking');
+            }
+            
+            // Attack 1 (light)
+            if (keys[attack1Key] && !player.isAttacking && !player.isBlocking) {
+                performAttack(player, 'light');
+            }
+            
+            // Attack 2 (heavy)
+            if (keys[attack2Key] && !player.isAttacking && !player.isBlocking) {
+                performAttack(player, 'heavy');
+            }
+            
+            // Special move
+            if (keys[specialKey] && player.energy >= 50 && !player.isAttacking && !player.isBlocking) {
+                performSpecialMove(player);
+            }
+        }
+        
+        // Handle CPU AI
+        function handleCpuAi(cpu, player) {
+            // Only run AI if this is player 2 (CPU)
+            if (cpu !== player2) return;
+            
+            // Simple AI behavior
+            const distanceToPlayer = Math.abs(cpu.position - player.position);
+            
+            // Random decision making
+            const decision = Math.random();
+            
+            // If player is attacking, high chance to block
+            if (player.isAttacking && decision < 0.7) {
+                cpu.isBlocking = true;
+                const fighter = document.getElementById('fighter2');
+                fighter.classList.add('blocking');
+            } else {
+                cpu.isBlocking = false;
+                const fighter = document.getElementById('fighter2');
+                fighter.classList.remove('blocking');
+                
+                // If close to player, chance to attack
+                if (distanceToPlayer < 15) {
+                    if (decision < 0.1 && cpu.energy >= 50) {
+                        // Special move
+                        performSpecialMove(cpu);
+                    } else if (decision < 0.3) {
+                        // Heavy attack
+                        performAttack(cpu, 'heavy');
+                    } else if (decision < 0.5) {
+                        // Light attack
+                        performAttack(cpu, 'light');
+                    }
+                } else {
+                    // Move toward player
+                    if (cpu.position < player.position) {
+                        cpu.position = Math.min(95, cpu.position + 0.5);
+                    } else {
+                        cpu.position = Math.max(5, cpu.position - 0.5);
+                    }
+                    
+                    // Random jump
+                    if (decision < 0.02 && !cpu.isJumping) {
+                        cpu.isJumping = true;
+                        playSound('jump');
+                        
+                        const fighter = document.getElementById('fighter2');
+                        fighter.style.transition = 'transform 0.5s cubic-bezier(0.2, -0.3, 0.7, 1.3)';
+                        fighter.style.transform = `${fighter.style.transform.includes('-1') ? 'scaleX(-1)' : 'scaleX(1)'} translateY(-100px)`;
+                        
+                        setTimeout(() => {
+                            fighter.style.transition = 'transform 0.3s ease';
+                            fighter.style.transform = `${fighter.style.transform.includes('-1') ? 'scaleX(-1)' : 'scaleX(1)'} translateY(0)`;
+                            
+                            setTimeout(() => {
+                                cpu.isJumping = false;
+                            }, 300);
+                        }, 500);
+                    }
+                }
+            }
+        }
+        
+        // Perform attack
+        function performAttack(attacker, type) {
+            attacker.isAttacking = true;
+            
+            const fighter = attacker === player1 ? document.getElementById('fighter1') : document.getElementById('fighter2');
+            fighter.classList.add('attacking');
+            
+            // Play attack sound
+            playSound(type === 'light' ? 'lightAttack' : 'heavyAttack');
+            
+            // Attack animation
+            const attackDuration = type === 'light' ? 400 : 700;
+            
+            setTimeout(() => {
+                fighter.classList.remove('attacking');
+                attacker.isAttacking = false;
+            }, attackDuration);
+            
+            // Increase energy
+            attacker.energy = Math.min(100, attacker.energy + (type === 'light' ? 5 : 10));
+            updateEnergyBars();
+        }
+        
+        // Perform special move
+        function performSpecialMove(attacker) {
+            if (attacker.energy < 50) return;
+            
+            attacker.isAttacking = true;
+            attacker.energy -= 50;
+            updateEnergyBars();
+            
+            const fighter = attacker === player1 ? document.getElementById('fighter1') : document.getElementById('fighter2');
+            fighter.classList.add('attacking');
+            fighter.classList.add('special');
+            
+            // Play special move sound
+            playSound('special');
+            
+            // Show special move name
+            const arena = document.getElementById('fightArena');
+            const moveIndex = Math.floor(Math.random() * attacker.specialMoves.length);
+            const moveName = attacker.specialMoves[moveIndex];
+            
+            const moveText = document.createElement('div');
+            moveText.className = 'round-announcement';
+            moveText.style.fontSize = '2rem';
+            moveText.style.color = attacker === player1 ? selectedFighter.color : cpuFighter.color;
+            moveText.textContent = moveName;
+            arena.appendChild(moveText);
+            
+            // Create special effect
+            const effect = document.createElement('div');
+            effect.className = 'special-effect';
+            effect.style.left = `${attacker.position}%`;
+            effect.style.bottom = '30%';
+            effect.style.background = `radial-gradient(circle, ${attacker === player1 ? selectedFighter.color : cpuFighter.color}, transparent)`;
+            arena.appendChild(effect);
+            
+            setTimeout(() => {
+                moveText.remove();
+                effect.remove();
+                fighter.classList.remove('attacking');
+                fighter.classList.remove('special');
+                attacker.isAttacking = false;
+            }, 1000);
+        }
+        
+        // Check for collision between fighters
+        function checkCollision() {
+            const distanceThreshold = 10; // Percentage of screen width
+            const distance = Math.abs(player1.position - player2.position);
+            
+            if (distance < distanceThreshold) {
+                // If player 1 is attacking and player 2 is not blocking
+                if (player1.isAttacking && !player2.isBlocking) {
+                    // Calculate damage based on power
+                    const damage = calculateDamage(player1, player2, player1.isAttacking === 'heavy' ? 'heavy' : 'light');
+                    applyDamage(player2, damage);
+                }
+                
+                // If player 2 is attacking and player 1 is not blocking
+                if (player2.isAttacking && !player1.isBlocking) {
+                    // Calculate damage based on power
+                    const damage = calculateDamage(player2, player1, player2.isAttacking === 'heavy' ? 'heavy' : 'light');
+                    applyDamage(player1, damage);
+                }
+            }
+        }
+        
+        // Calculate damage
+        function calculateDamage(attacker, defender, attackType) {
+            let baseDamage;
+            
+            if (attackType === 'light') {
+                baseDamage = 5;
+            } else if (attackType === 'heavy') {
+                baseDamage = 10;
+            } else if (attackType === 'special') {
+                baseDamage = 20;
+            }
+            
+            // Apply power and intelligence modifiers
+            const attackerFighter = attacker === player1 ? selectedFighter : cpuFighter;
+            const defenderFighter = defender === player1 ? selectedFighter : cpuFighter;
+            
+            const powerModifier = attackerFighter.power / 100;
+            const defenseModifier = defenderFighter.intelligence / 100;
+            
+            // Calculate final damage
+            let finalDamage = Math.round(baseDamage * powerModifier * (2 - defenseModifier));
+            
+            // Add some randomness
+            finalDamage += Math.floor(Math.random() * 3) - 1;
+            
+            return Math.max(1, finalDamage); // Minimum 1 damage
+        }
+        
+        // Apply damage to a fighter
+        function applyDamage(player, damage) {
+            player.health = Math.max(0, player.health - damage);
+            updateHealthBars();
+            
+            // Show damage number
+            const arena = document.getElementById('fightArena');
+            const damageNumber = document.createElement('div');
+            damageNumber.className = 'damage-number';
+            damageNumber.textContent = damage;
+            damageNumber.style.left = `${player === player1 ? player1.position : player2.position}%`;
+            damageNumber.style.bottom = '60%';
+            arena.appendChild(damageNumber);
+            
+            // Play hit sound
+            playSound('hit');
+            
+            // Hit animation
+            const fighter = player === player1 ? document.getElementById('fighter1') : document.getElementById('fighter2');
+            fighter.classList.add('hit');
+            
+            setTimeout(() => {
+                fighter.classList.remove('hit');
+                damageNumber.remove();
+            }, 500);
+            
+            // Check if player is defeated
+            if (player.health <= 0) {
+                endRound();
+            }
+        }
+        
+        // Increase energy over time
+        function increaseEnergy() {
+            player1.energy = Math.min(100, player1.energy + 0.1);
+            player2.energy = Math.min(100, player2.energy + 0.1);
+            updateEnergyBars();
+        }
+        
+        // End the current round
+        function endRound() {
+            clearInterval(fightTimerInterval);
+            
+            // Determine round winner
+            let roundWinner;
+            if (player1.health <= 0) {
+                roundWinner = 'player2';
+                player2Wins++;
+            } else if (player2.health <= 0) {
+                roundWinner = 'player1';
+                player1Wins++;
+            } else if (player1.health > player2.health) {
+                roundWinner = 'player1';
+                player1Wins++;
+            } else if (player2.health > player1.health) {
+                roundWinner = 'player2';
+                player2Wins++;
+            } else {
+                roundWinner = 'draw';
+            }
+            
+            // Show round winner
+            const arena = document.getElementById('fightArena');
+            const winnerText = document.createElement('div');
+            winnerText.className = 'round-announcement';
+            
+            if (roundWinner === 'player1') {
+                winnerText.textContent = `${selectedFighter.name} WINS!`;
+                winnerText.style.color = selectedFighter.color;
+            } else if (roundWinner === 'player2') {
+                winnerText.textContent = `${cpuFighter.name} WINS!`;
+                winnerText.style.color = cpuFighter.color;
+            } else {
+                winnerText.textContent = 'DRAW!';
+                winnerText.style.color = '#ffffff';
+            }
+            
+            arena.appendChild(winnerText);
+            
+            // Play win sound
+            playSound('win');
+            
+            // Check if match is over
+            setTimeout(() => {
+                winnerText.remove();
+                
+                if (player1Wins >= Math.ceil(maxRounds / 2) || player2Wins >= Math.ceil(maxRounds / 2)) {
+                    endMatch();
+                } else {
+                    // Start next round
+                    currentRound++;
+                    resetPlayers();
+                    showRoundAnnouncement();
+                    startRoundTimer();
+                }
+            }, 3000);
+        }
+        
+        // End the match
+        function endMatch() {
+            // Determine match winner
+            let matchWinner;
+            let winnerName;
+            
+            if (player1Wins > player2Wins) {
+                matchWinner = 'player1';
+                winnerName = selectedFighter.name;
+            } else {
+                matchWinner = 'player2';
+                winnerName = cpuFighter.name;
+            }
+            
+            // Update game over screen
+            document.getElementById('winnerName').textContent = winnerName;
+            
+            // Show game over screen
+            showScreen('gameOverScreen');
+        }
+        
+        // Reset the game
+        function resetGame() {
+            currentRound = 1;
+            player1Wins = 0;
+            player2Wins = 0;
+            selectedFighter = null;
+            cpuFighter = null;
+            selectedStage = null;
+        }
+        
+        // Pause the game
+        function pauseGame() {
+            if (fightTimerInterval) {
+                clearInterval(fightTimerInterval);
+                
+                // Show pause menu
+                const arena = document.getElementById('fightArena');
+                const pauseText = document.createElement('div');
+                pauseText.className = 'round-announcement';
+                pauseText.textContent = 'PAUSED';
+                pauseText.style.color = '#ffffff';
+                pauseText.id = 'pauseText';
+                arena.appendChild(pauseText);
+                
+                // Pause game loop
+                window.cancelAnimationFrame(gameLoop);
+            }
+        }
+        
+        // Resume the game
+        function resumeGame() {
+            // Remove pause text
+            const pauseText = document.getElementById('pauseText');
+            if (pauseText) pauseText.remove();
+            
+            // Restart timer
+            startRoundTimer();
+            
+            // Restart game loop
+            requestAnimationFrame(gameLoop);
         }
         
         // Timer functions
@@ -736,6 +1667,60 @@
                 // Add some sparkle effects or other animations
             }
         }, 100);
+        
+        // Add stage hazards periodically
+        setInterval(() => {
+            if (currentScreen === 'fightingScreen' && selectedStage) {
+                const randomChance = Math.random();
+                if (randomChance < 0.1) {
+                    triggerStageHazard();
+                }
+            }
+        }, 5000);
+        
+        // Trigger a random stage hazard
+        function triggerStageHazard() {
+            const hazards = selectedStage.hazards;
+            const randomHazard = hazards[Math.floor(Math.random() * hazards.length)];
+            
+            // Show hazard warning
+            const arena = document.getElementById('fightArena');
+            const warningText = document.createElement('div');
+            warningText.className = 'round-announcement';
+            warningText.style.fontSize = '1.5rem';
+            warningText.style.color = '#ff0000';
+            warningText.textContent = `WARNING: ${randomHazard}`;
+            arena.appendChild(warningText);
+            
+            // Play warning sound
+            playSound('hazard');
+            
+            setTimeout(() => {
+                warningText.remove();
+                
+                // Apply hazard effect
+                const hazardEffect = document.createElement('div');
+                hazardEffect.className = 'special-effect';
+                hazardEffect.style.width = '100%';
+                hazardEffect.style.height = '100%';
+                hazardEffect.style.borderRadius = '0';
+                hazardEffect.style.background = `rgba(255, 0, 0, 0.3)`;
+                arena.appendChild(hazardEffect);
+                
+                // Damage both players if they're not jumping
+                if (!player1.isJumping) {
+                    applyDamage(player1, Math.floor(Math.random() * 5) + 3);
+                }
+                
+                if (!player2.isJumping) {
+                    applyDamage(player2, Math.floor(Math.random() * 5) + 3);
+                }
+                
+                setTimeout(() => {
+                    hazardEffect.remove();
+                }, 1000);
+            }, 2000);
+        }
     </script>
 </body>
 </html>
