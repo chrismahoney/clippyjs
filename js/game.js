@@ -28,6 +28,11 @@ class GameState {
 // Fighter class
 class Fighter {
     constructor(data) {
+        // Validate data parameter to prevent null/undefined errors
+        if (!data) {
+            throw new Error('Fighter data cannot be null or undefined');
+        }
+        
         this.name = data.name;
         this.power = data.power;
         this.speed = data.speed;
